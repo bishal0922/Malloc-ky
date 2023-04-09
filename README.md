@@ -11,3 +11,12 @@ spicy implementation of malloc() with garbage collection
 
 - ggdb: adds debugging information to the compiled binary that can be used by the gdb debugger. This includes information about source code lines and symbols, which can be helpful when debugging the program.
 
+### Problems I ran into:
+
+- [ ] when `heap_alloc(0)` and `heap_alloc(1)` are called simaltaneously they have the same pointer address. Handle size 0?
+
+```
+Alloced Chunks (101): 
+ start: 0x5638574da040, size: 0
+ start: 0x5638574da040, size: 1
+```
