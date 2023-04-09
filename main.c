@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define HEAP_CAP 64000 
-#define HEAP_ALLOCED_CAP 1024
+#define HEAP_ALLOCATED_CAP 1024
 
 typedef struct{
 	void *start;
@@ -13,8 +14,8 @@ typedef struct{
 char heap[HEAP_CAP] = {0};
 size_t heap_size = 0;
 
-Heap_Chunk heap_alloced[HEAP_ALLOCED_CAP] = {0};
-size_t heap_alloced_size = 0;
+Heap_Chunk heap_allocated[HEAP_ALLOCATED_CAP] = {0};
+size_t heap_allocated_size = 0;
 
 
 void *heap_alloc(size_t size)
@@ -33,18 +34,18 @@ void *heap_alloc(size_t size)
 		.size = size
 	};
 	
-	assert(heap_alloced_size <= HEAP_ALLOCED_CAP);
-	heap_alloced[heap_alloced_size++] = chunk;
+	assert(heap_allocated_size <= HEAP_ALLOCATED_CAP);
+	heap_allocated[heap_allocated_size++] = chunk;
 
 	return result;
 }
 
 void heap_dump_alloced_chunks(void)
 {
-	printf("Alloced Chunks (%zu): \n", heap_alloced_size);
-	for (size_t i = 0; i < heap_alloced_size; i++)
+	printf("Alloced Chunks (%zu): \n", heap_allocated_size);
+	for (size_t i = 0; i < heap_allocated_size; i++)
 	{
-		printf(" start: %p, size: %zu\n", heap_alloced[i].start, heap_alloced[i].size);
+		printf(" start: %p, size: %zu\n", heap_allocated[i].start, heap_allocated[i].size);
 	}
 }
 
