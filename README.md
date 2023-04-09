@@ -13,10 +13,12 @@ spicy implementation of malloc() with garbage collection
 
 ### Problems I ran into:
 
-- [ ] when `heap_alloc(0)` and `heap_alloc(1)` are called simaltaneously they have the same pointer address. Handle size 0?
+- [ ] when `heap_alloc(0)` and `heap_alloc(1)` are called simaltaneously they have the same pointer address. Handle size 0? sol: I just skilled when 0 is called returning Null
 
 ```
 Alloced Chunks (101): 
  start: 0x5638574da040, size: 0
  start: 0x5638574da040, size: 1
 ```
+
+- when freeing chunks a hashtable would be better to have pointer as key and address as chunk?
