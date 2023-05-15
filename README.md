@@ -1,6 +1,7 @@
 # Malloc-ky
 spicy implementation of malloc() with garbage collection 
 
+`make` then `./heap`
 
 ## Makefile (flags explanation)
 - Wall: enables all warning messages that the compiler can produce. This helps to catch potential issues in the code that may cause problems at runtime.
