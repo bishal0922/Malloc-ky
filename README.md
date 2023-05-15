@@ -22,3 +22,6 @@ Alloced Chunks (101):
 ```
 
 - when freeing chunks a hashtable would be better to have pointer as key and address as chunk?
+
+Final
+- Insert, Remove are O(n) lookup is O(log n)
