@@ -34,6 +34,7 @@ Chunk_List freed_chunks = {
 		[0] = {.start = heap, .size = sizeof(heap)}
 	},
 };
+Chunk_List tmp_chunks = {0};
 
 //deprecated
 Chunk heap_allocated[CHUNK_LIST_CAP] = {0};
@@ -42,9 +43,12 @@ size_t heap_allocated_size = 0;
 Chunk heap_freed[CHUNK_LIST_CAP] = {0};
 size_t heap_freed_size = 0;
 
+
+
 /*
 	FUNCTIONS START HERE
 */
+
 
 
 void chunk_list_dump(const Chunk_List *list)
@@ -101,6 +105,37 @@ void chunk_list_insert(Chunk_List *list,void *start, size_t size)
 	list->count++;
 }
 
+//merge the chunks so that space is utilized	
+void chunk_list_merge(const Chunk_List *src, Chunk_List *dest)
+{
+	dest->count = 0;
+
+	for (size_t i = 0; i < src->count; i++)
+	{
+		const Chunk chunk = src->chunks[i];
+		if (dest->count > 0)
+		{
+			Chunk *top_chunk = &dest->chunks[dest->count - 1];
+			dest->chunks[dest->count - 1].size += chunk.size;
+
+			//if the chunks are adjacent, then merge them
+			if (top_chunk->start + top_chunk->size == chunk.start)
+			{
+				top_chunk->size += chunk.size;
+			}
+			else
+			{
+				//O(1), since we're only adding one element no O(n)
+				chunk_list_insert(dest, chunk.start, chunk.size);
+			}
+		}
+		else 
+		{
+			chunk_list_insert(dest, chunk.start, chunk.size);
+		}
+	}
+}
+
 void chunk_list_remove(Chunk_List *list, size_t index)
 {
 	//make sure that the index is valid
@@ -119,6 +154,11 @@ void *heap_alloc(size_t size)
 {
 	if (size > 0)
 	{
+		//
+		chunk_list_merge(&tmp_chunks, &freed_chunks);
+		freed_chunks = tmp_chunks;
+
+		//search for a chunk that is big enough
 		for (size_t i = 0; i < freed_chunks.count; ++i)
 		{
 			const Chunk chunk = freed_chunks.chunks[i];
@@ -171,17 +211,18 @@ void heap_collect()
 int main()
 {
 	//	heap_free(root);
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
+
 		void *p = heap_alloc(i);
 		if (i % 2 == 0)
 		{
 			heap_free(p);
 		}
-	}
-	heap_alloc(420);
-	chunk_list_dump(&allocated_chunks);
 
+	}
+	heap_alloc(10);
+	chunk_list_dump(&allocated_chunks);
 	chunk_list_dump(&freed_chunks);
 
 	return 0;

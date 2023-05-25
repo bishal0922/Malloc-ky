@@ -1,3 +1,4 @@
 *.o
 heap
 *.out
+heap.dSYM/*
